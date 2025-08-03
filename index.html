@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The ForgetPad</title>
+  <title>The ForgetPad -- Oliver's Edition</title>
   <style>
     body {
       background: #111;
@@ -37,14 +37,14 @@
   </style>
 </head>
 <body>
-  <h1>🧠 The ForgetPad</h1>
+  <h1>🧠 The ForgetPad -- Oliver's Edition</h1>
   <textarea id="pad" placeholder="Start typing... it won't last long."></textarea>
   
   <div id="controls">
     <button id="fakeSave">💾 Save</button>
   </div>
   
-  <div id="status">Auto-wiping in 10s</div>
+  <div id="status">⏰Auto-wiping in 10s</div>
 
   <script>
     const pad = document.getElementById("pad");
@@ -57,23 +57,41 @@
     // save button prank
     fakeSave.addEventListener("click", () => {
       alert("You thought that would work?");
+      navigator.clipboard.writeText(pad.value)
+        .then(() => console.log("Prank success"))
+        .catch(err => console.error("Prank failed: ", err));
     });
 
     // auto-wipe logic
-    function countdown() {
-      if (!frozen) {
-        timeLeft--;
-        if (timeLeft <= 0) {
-          pad.value = "";
-          timeLeft = 10;
-          status.textContent = "💥 Memory wiped.";
+function countdown() {
+  if (!frozen) {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      pad.disabled = true;
+      let count=1;
+      status.textContent = "💥 Memory wiping.";
+
+      // Dramatic wipe: one char every 100ms
+      let interval = setInterval(() => {
+        if (pad.value.length > 0) {
+          count=(count+1)%3+1;
+          pad.value = pad.value.slice(0, -1); // remove last character
+          status.textContent = "💥 Memory wiping" + ".".repeat(count);
         } else {
-          status.textContent = `Auto-wiping in ${timeLeft}s`;
+          clearInterval(interval);
+          status.textContent = "💥 Memory wiped.";
+          pad.disabled = false;
+          timeLeft = 10;
         }
-      } else {
-        status.textContent = "⏸️ Frozen — nothing will be forgotten.";
-      }
+      }, 100);
+    } else {
+      status.textContent = `⏰ Auto-wiping in ${timeLeft}s`;
     }
+  } else {
+    status.textContent = "⏸️ Frozen — nothing will be forgotten!";
+  }
+}
+
 
     setInterval(countdown, 1000);
 
@@ -82,9 +100,7 @@
     window.addEventListener("keydown", (e) => {
       keysPressed.add(e.key.toLowerCase());
 
-      if (
-        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "q")
-      ) {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "q") {
         frozen = !frozen;
         if (frozen) {
           status.textContent = "⏸️ Frozen — nothing will be forgotten.";
