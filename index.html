@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The ForgetPad -- Oliver's Edition</title>
+  <title>ForgetPad</title>
   <style>
     body {
       background: #111;
@@ -37,7 +37,7 @@
   </style>
 </head>
 <body>
-  <h1>🧠 The ForgetPad -- Oliver's Edition</h1>
+  <h1>🧠 ForgetPad</h1>
   <textarea id="pad" placeholder="Start typing... it won't last long."></textarea>
   
   <div id="controls">
@@ -103,7 +103,7 @@ function countdown() {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "q") {
         frozen = !frozen;
         if (frozen) {
-          status.textContent = "⏸️ Frozen — nothing will be forgotten.";
+          status.textContent = "⏸️ Frozen — nothing will be forgotten!";
         } else {
           status.textContent = `Auto-wiping in ${timeLeft}s`;
         }
